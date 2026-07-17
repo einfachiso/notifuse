@@ -61,10 +61,15 @@ export function AutomationsPage() {
     enabled: !!workspaceId
   })
 
-  // Fetch templates for reference
+  // Fetch all email templates so email nodes can resolve their selected template's
+  // name on the canvas regardless of category. The automation email-node picker
+  // (EmailConfigForm -> TemplateSelectorInput) is not category-restricted, so limiting
+  // this reference list to 'marketing' made validly-selected non-marketing templates
+  // (e.g. a welcome email, which since v20 are meant to be sent via automations)
+  // render as "Template set" instead of their name.
   const { data: templatesData } = useQuery({
-    queryKey: ['templates', workspaceId, 'marketing'],
-    queryFn: () => templatesApi.list({ workspace_id: workspaceId, category: 'marketing', channel: 'email' }),
+    queryKey: ['templates', workspaceId, 'email'],
+    queryFn: () => templatesApi.list({ workspace_id: workspaceId, channel: 'email' }),
     enabled: !!workspaceId
   })
 
